@@ -27,3 +27,6 @@ __pycache__/
 .vscode/
 .idea/
 .DS_Store
+# Compiled binary
+src/smpv_d2
+
