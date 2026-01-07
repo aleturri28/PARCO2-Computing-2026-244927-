@@ -29,23 +29,15 @@ repo/
 ├── README.md
 ├── .gitignore
 ├── src/
-│   ├── smpv_d2.cpp
-│   └── smpv_d2
 ├── scripts/
-│   ├── strong_mpi.pbs
-│   ├── weak_mpi.pbs
-│   ├── strong_hybrid_128.pbs
-│   └── weak_hybrid_128.pbs
 ├── matrix/
-│   └── default.txt
 ├── results/
-│   └── default.txt
 ├── plots/
-│   └── default.txt
 └── .git/
 ```
 
-Directories `matrix/`, `results/`, and `plots/` contain placeholder files and are populated during experiments.
+- `matrix/` and `results/` contain **placeholder files** and are populated during executions on the cluster.  
+- `plots/` contains **subdirectories with all the plots generated locally** from the collected CSV results (MPI-only and hybrid, strong and weak scaling).
 
 ---
 
@@ -69,7 +61,7 @@ Matrices used in this project:
 ### Weak Scaling
 
 Weak scaling experiments do **not** use real matrices.  
-Matrices are generated at runtime using a synthetic generator to keep a constant workload per MPI rank.
+Matrices are generated at runtime using a synthetic generator, keeping a constant workload per MPI rank.
 
 ---
 
@@ -169,24 +161,14 @@ qsub -v MATRIX=matrix/cage12/cage12.mtx,ITERS=80,RUNS=5 scripts/strong_mpi.pbs
 
 ---
 
-## 8. Output Files
+## 8. Output and Plots
 
-All output files are written to the `results/` directory.
+- Raw timing results are stored in the `results/` directory as CSV files.  
+- All plots used for the analysis are stored in the `plots/` directory, organised in subfolders according to:
+  - MPI-only vs Hybrid
+  - Strong scaling vs Weak scaling
 
-### Strong Scaling
-- `strong_<matrix>_mpi.csv`
-- `strong_<matrix>_hybrid_128.csv`
-
-### Weak Scaling
-- `weak_mpi.csv`
-- `weak_hybrid_128.csv`
-
-PBS standard output logs:
-
-- `strong_mpi.log`
-- `weak_mpi.log`
-- `strong_hybrid_128.log`
-- `weak_hybrid_128.log`
+These plots are generated locally from the CSV results and are included in the repository for inspection.
 
 ---
 
