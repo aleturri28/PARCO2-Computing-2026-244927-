@@ -1,0 +1,48 @@
+#!/bin/bash
+#PBS -N weak_mpi
+#PBS -q short_cpuQ
+#PBS -l select=4:ncpus=96:mpiprocs=32
+#PBS -l walltime=06:00:00
+#PBS -j oe
+#PBS -o results/weak_mpi.log
+
+set -euo pipefail
+cd "$PBS_O_WORKDIR"
+
+module purge
+module load gcc91
+module load mpich-3.2.1--gcc-9.1.0
+
+mkdir -p results
+
+: "${P_LIST:=1 2 4 8 16 32 64 128}"
+: "${BASE:=1024}"        # rows per rank
+: "${NNZPR:=32}"
+: "${ITERS:=50}"
+: "${WARMUP:=3}"
+: "${RUNS:=10}"
+: "${SEED:=1}"
+
+OUTCSV="results/weak_mpi.csv"
+
+mpicxx -O3 -std=c++17 -fopenmp -march=native -o src/smpv_d2 src/smpv_d2.cpp
+[ -x src/smpv_d2 ] || { echo "Build failed"; exit 11; }
+
+export OMP_NUM_THREADS=1
+export OMP_PROC_BIND=close
+export OMP_PLACES=cores
+
+rm -f "$OUTCSV"
+
+for P in $P_LIST; do
+  mpirun -np "$P" ./src/smpv_d2 \
+    --case weak \
+    --gen-n "$BASE" \
+    --nnz-per-row "$NNZPR" \
+    --seed "$SEED" \
+    --iters "$ITERS" \
+    --warmup "$WARMUP" \
+    --runs "$RUNS" \
+    --no-omp \
+    --out "$OUTCSV"
+done

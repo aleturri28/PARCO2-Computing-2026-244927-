@@ -1,0 +1,29 @@
+# Build / binaries
+bin/
+build/
+*.o
+*.a
+*.so
+*.out
+*.exe
+
+# Results / logs / tmp
+results/
+plots/output/
+*.log
+
+# Scheduler outputs
+*.pbs.o*
+*.pbs.e*
+slurm-*.out
+
+# Python env / cache
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
